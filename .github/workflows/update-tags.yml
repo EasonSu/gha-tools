@@ -1,0 +1,22 @@
+name: Update Tags
+
+on:
+  release:
+    types:
+      - published
+      - edited
+
+jobs:
+  UpdateTags:
+    name: Update Tags
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Run script to update version tags
+        uses: ./github-actions/update-version-tags
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
