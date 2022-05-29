@@ -105,6 +105,7 @@ async function run() {
 
 	if ( draft || prerelease ) {
 		core.notice( `Skip major and minor version tags updating for draft or pre-release` );
+		return;
 	}
 
 	core.info( `Updating major version tag: ${ majorTag }` );
