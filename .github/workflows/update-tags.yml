@@ -20,21 +20,22 @@ jobs:
         uses: ./github-actions/prepare-node
         with:
           node-version: 16
-          cache-dependency-path: ./github-actions/update-version-tags
+          cache-dependency-path: ./packages/js/github-actions
           install-deps: "no"
 
       - name: Commit bundle
         id: commit-bundle
         # https://api.github.com/users/github-actions%5Bbot%5D
         run: |
-          cd ./github-actions/update-version-tags
+          cd ./packages/js/github-actions
           npm ci --ignore-scripts
-          npm run build
+          npm run build:update-version-tags
+          cd -
           git config user.name github-actions[bot]
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git rm -r .
           git checkout HEAD -- ./github-actions
-          git add ./dist/*
+          git add ./github-actions/update-version-tags/build
           git commit -m "Build the bundle of update-version-tags action."
           git push origin HEAD:refs/heads/tmp-gha-bundle
           git push -d origin tmp-gha-bundle

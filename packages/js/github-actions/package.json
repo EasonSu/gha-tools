@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "npx @vercel/ncc build ./update-version-tags/index.js -o ../../../github-actions/update-version-tags/build"
+    "build:update-version-tags": "npx @vercel/ncc build ./update-version-tags/index.js -o ../../../github-actions/update-version-tags/build"
   },
   "author": "",
   "license": "ISC",
