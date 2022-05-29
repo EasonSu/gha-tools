@@ -1,0 +1,15 @@
+https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage
+https://github.com/exussum12/coverageChecker
+
+composer require --dev dealerdirect/phpcodesniffer-composer-installer:^v0.7
+composer require --dev exussum12/coverage-checker
+composer require --dev wp-coding-standards/wpcs:^2.3
+
+git diff > diff.txt
+vendor/bin/phpcs ./* -q --report=json > phpcs.json
+vendor/bin/diffFilter --phpcsStrict diff.txt phpcs.json --report=phpcs 0
+
+vendor/bin/diffFilter --phpcsStrict <(git diff) <(vendor/bin/phpcs ./* -q --report=json) --report=phpcs 0
+"lint:php:diff": "vendor/bin/diffFilter --phpcsStrict <(git diff) <(vendor/bin/phpcs ./* -q --report=json) --report=phpcs 0"
+
+vendor/bin/phpcs --filter=gitmodified ./*
