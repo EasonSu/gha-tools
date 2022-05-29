@@ -2,9 +2,8 @@
   "name": "update-version-tags",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
   "scripts": {
-    "build": "npx @vercel/ncc build ./src/index.js"
+    "build": "npx @vercel/ncc build ./update-version-tags/index.js -o ../../../github-actions/update-version-tags/build"
   },
   "author": "",
   "license": "ISC",
