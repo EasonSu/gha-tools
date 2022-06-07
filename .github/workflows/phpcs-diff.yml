@@ -30,8 +30,9 @@ jobs:
           echo "DEPTH: ${DEPTH}"
           git log
           echo "======================================="
-          git diff HEAD^...
+          git diff HEAD^... > diff1
           echo "======================================="
           git fetch --no-tags --prune --depth=1 origin ${{ github.base_ref }}
           git fetch --no-tags --prune --depth=$DEPTH origin ${{ github.head_ref }}
-          git diff origin/${{ github.base_ref }}...origin/${{ github.head_ref }}
+          git diff origin/${{ github.base_ref }}...origin/${{ github.head_ref }} > diff2
+          diff diff1 diff2
