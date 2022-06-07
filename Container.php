@@ -74,20 +74,9 @@ final class Container implements ContainerInterface {
 		foreach ( $this->service_providers as $service_provider_class ) {
 			$this->container->addServiceProvider( $service_provider_class );
 		}
-	}
 
-	/**
-	 * Finds an entry of the container by its identifier and returns it.
-	 *
-	 * @param string $id Identifier of the entry to look for.
-	 *
-	 * @throws NotFoundExceptionInterface  No entry was found for **this** identifier.
-	 * @throws ContainerExceptionInterface Error while retrieving the entry.
-	 *
-	 * @return mixed Entry.
-	 */
-	public function get( $id ){
-		return $this->container->get( $id );
+
+		var_dump( 'test123' );
 	}
 
 	/**
@@ -101,7 +90,7 @@ final class Container implements ContainerInterface {
 	 *
 	 * @return bool
 	 */
-	public function has( $id ) {
+	public function has( $id){
 		return $this->container->has( $id );
 	}
 }
