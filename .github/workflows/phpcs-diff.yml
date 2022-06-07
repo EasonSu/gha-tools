@@ -1,0 +1,38 @@
+name: PHP Coding Standards Diff
+
+on:
+  pull_request:
+    paths:
+      - "**.php"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  PHPCodingStandardsDiff:
+    name: PHP coding standards diff
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
+
+      - name: PHP coding standards diff
+        run: |
+          echo "github.sha: ${{ github.sha }}"
+          echo "github.ref: ${{ github.ref }}"
+          echo "github.base_ref: ${{ github.base_ref }}"
+          echo "github.head_ref: ${{ github.head_ref }}"
+          echo "github.event.pull_request.commits: ${{ github.event.pull_request.commits }}"
+          DEPTH=$((${{ github.event.pull_request.commits }} + 1))
+          echo "DEPTH: ${DEPTH}"
+          git log
+          echo "======================================="
+          git diff HEAD^... > diff1
+          echo "======================================="
+          git fetch --no-tags --prune --depth=1 origin ${{ github.base_ref }}
+          git fetch --no-tags --prune --depth=$DEPTH origin ${{ github.head_ref }}
+          git diff origin/${{ github.base_ref }}...origin/${{ github.head_ref }} > diff2
+          diff diff1 diff2

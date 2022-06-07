@@ -35,7 +35,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * `src/Internal/DependencyManagement/ServiceProviders` folder unless there's a good reason to put them elsewhere.
  * All the service provider class names must be in the `$service_providers` array.
  */
-final class Container implements ContainerInterface {
+final class ContainerB implements ContainerInterface {
 
 	/**
 	 * The list of service provider classes to register.
@@ -66,17 +66,14 @@ final class Container implements ContainerInterface {
 	 * @param LeagueContainer|null $container
 	 */
 	public function __construct( ?LeagueContainer $container = null ) {
-		$this->container = $container ?? new LeagueContainer();
+		$this->container=$container ?? new LeagueContainer();
 		$this->container->share( ContainerInterface::class, $this );
 		$this->container->inflector( ContainerAwareInterface::class )
-			->invokeMethod( 'set_container', [ ContainerInterface::class ] );
+			->invokeMethod( 'set_container', [ContainerInterface::class] );
 
 		foreach ( $this->service_providers as $service_provider_class ) {
 			$this->container->addServiceProvider( $service_provider_class );
 		}
-
-
-		var_dump( 'test123' );
 	}
 
 	/**
@@ -90,7 +87,7 @@ final class Container implements ContainerInterface {
 	 *
 	 * @return bool
 	 */
-	public function has( $id){
+	public function has( $id ) {
 		return $this->container->has( $id );
 	}
 }
