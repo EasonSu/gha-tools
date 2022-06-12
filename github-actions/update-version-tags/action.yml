@@ -6,7 +6,7 @@ inputs:
     description: The GITHUB_TOKEN secret.
 
   sha:
-    description: The SHA of commit to set version tags. By default, uses the release branch or commit.
+    description: The SHA1 of commit to set version tags. By default, uses the release branch or commit.
 
 runs:
   using: node16
