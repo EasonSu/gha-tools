@@ -2,4 +2,8 @@ changelog:
   categories:
     - title: Exciting New Features 🎉
       labels:
-        - Tool Bar
+        - Tool Foo
+
+    - title: Fixed 🔨
+      labels:
+        - Tool Foo Fix
