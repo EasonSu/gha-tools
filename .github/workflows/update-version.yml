@@ -1,0 +1,21 @@
+name: GitHub Actions - Prepare New Release
+
+on:
+  push:
+    branches:
+      - test-update-version
+
+jobs:
+  PrepareRelease:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Prepare release commits
+        run: |
+          cd ./packages/js/github-actions
+          jq '.version="1.2.3"' package.json > package.json.tmp && mv package.json.tmp package.json
+          jq '.version="1.2.3"' package-lock.json > package-lock.json.tmp && mv package-lock.json.tmp package-lock.json
+          git diff
