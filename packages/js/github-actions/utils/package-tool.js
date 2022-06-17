@@ -47,4 +47,19 @@ export default class PackageTool {
 	getSettings() {
 		return JSON.parse( this.getFile( 'package.json' ) );
 	}
+
+	getChangelogByVersion( version ) {
+        const versionPattern = version.replace( /\./g, '\\.' );
+        const pattern = `^(## [\\d-]{10} \\(${ versionPattern }\\))\\n((?:.+\\n)+)`;
+        const regex = new RegExp( pattern, 'm' );
+
+        const changelog = this.getFile( 'CHANGELOG.md' );
+        const [ , heading, entriesWithCategories ] = changelog.match( regex ) || [];
+
+        return { version, heading, entriesWithCategories };
+	}
+
+	getCurrentVersionChangelog() {
+		return this.getChangelogByVersion( this.getSettings().version );
+	}
 }
