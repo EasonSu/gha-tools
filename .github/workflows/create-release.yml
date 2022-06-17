@@ -1,0 +1,64 @@
+name: GitHub Actions - Create New Release
+
+on:
+  pull_request_review:
+    types:
+      - submitted
+
+jobs:
+  # CheckReleaseBranch:
+  #   name: Check Release Branch
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Check created release branch
+  #       uses: actions/github-script@v6
+  #       with:
+  #         script: |
+  #           if ( ! context.payload.created ) {
+  #             await github.rest.actions.cancelWorkflowRun( {
+  #               ...context.repo,
+  #               run_id: context.runId,
+  #             } );
+  #           }
+  Debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+        echo "github.event.pull_request.base.ref: ${{ github.event.pull_request.base.ref }}"
+        echo "github.base_ref: ${{ github.base_ref }}"
+        echo "github.head_ref: ${{ github.head_ref }}"
+        echo "github.ref: ${{ github.ref }}"
+        echo "github.ref_name: ${{ github.ref_name }}"
+        echo "github.base_ref: ${{ github.base_ref }}"
+
+  CreateRelease:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: CheckCreatedBranch
+    if: ${{ github.event.pull_request.base.ref == 'release/actions' && github.event.review.state == 'approved' }}
+    steps:
+      - name: Get release parameters
+        run: |
+          cd ./packages/js/github-actions
+          VERSION=$(jq --r '.version' package.json)
+          TAG="actions-v${VERSION}"
+          BODY=$(pcregrep -M "^## [\d-]{10} \(${VERSION}\)(\n(###|\*).+)+" CHANGELOG.md)
+          echo "$VERSION"
+          echo "$TAG"
+          echo "$BODY"
+
+      - name: Create a new release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            console.log( context.payload )
+            console.log( github.rest.repos.createRelease )
+            if ( false && ! context.payload.created ) {
+              await github.rest.repos.createRelease( {
+                ...context.repo,
+                tag_name: context.runId,
+                target_commitish: '',
+                name: '',
+                body: '',
+              } );
+            }
