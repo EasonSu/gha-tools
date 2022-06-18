@@ -3,7 +3,8 @@ name: GitHub Actions - Create Pull Request
 on:
   push:
     branches:
-      - release/actions
+      # - release/actions
+      - none
 
 jobs:
   CreateRelease:
