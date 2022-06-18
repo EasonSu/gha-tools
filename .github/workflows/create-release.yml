@@ -19,6 +19,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
+            const fs = require( 'fs' );
             const workspace = '${{ github.workspace }}';
             const packageDir = 'packages/js/github-actions';
             const { default: PackageTool } = await import( `${ workspace }/${ packageDir }/utils/package-tool.js` );
@@ -61,7 +62,18 @@ jobs:
 
             core.setOutput( 'release', release );
 
+            const content = JSON.stringify( release );
+            fs.writeFileSync( '/tmp/release.json' , content, 'utf8' );
+
+      - name: Upload release artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: /tmp/release.json
+
       - name: Call workflow to update version tags
+        # skip to test workflow_on
+        if: false
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_GH_TOKEN }}
