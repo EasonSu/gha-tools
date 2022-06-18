@@ -8,6 +8,9 @@ inputs:
   sha:
     description: The SHA of commit to set version tags. By default, uses the release branch or commit.
 
+  release:
+    description: The release data in a release payload/event.
+
 runs:
   using: node16
   main: build/index.js

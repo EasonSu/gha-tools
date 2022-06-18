@@ -85,6 +85,10 @@ class RepoTool {
 
 async function run() {
 	const { context } = github;
+console.log( context.payload )
+const release = context.payload.release || JSON.parse( core.getInput( 'release' ) );
+console.log( release )
+return;
 	const tagName = context.payload.release.tag_name;
 
 	const token = core.getInput( 'repo-token' );
