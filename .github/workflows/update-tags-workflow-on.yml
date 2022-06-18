@@ -25,22 +25,23 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const tagReg = /^v(0|[1-9]\d*)(\.(0|[1-9]\d*)){2}-actions$/;
             const { payload, eventName } = context;
-            const shouldCancelByWorkflowRun = eventName === 'workflow_run' && payload.workflow_run.conclusion !== 'success';
-            console.log('shouldCancelByWorkflowRun', shouldCancelByWorkflowRun)
-            /*
-            if ( shouldCancelByWorkflowRun || ! tagReg.test( payload.release.tag_name ) ) ) {
+            const tagReg = /^actions-v(0|[1-9]\d*)(\.(0|[1-9]\d*)){2}$/;
+            const failedWorkflowRun = eventName === 'workflow_run' && payload.workflow_run.conclusion !== 'success';
+            const mismatchedTagName = eventName === 'release' && ! tagReg.test( payload.release.tag_name );
+            console.log('failedWorkflowRun', failedWorkflowRun)
+            console.log('mismatchedTagName', mismatchedTagName)
+
+            if ( failedWorkflowRun || mismatchedTagName ) {
               await github.rest.actions.cancelWorkflowRun( {
                 ...context.repo,
                 run_id: context.runId,
               } );
             }
-            */
 
       - name: Get release artifact
         id: set-result
-        if: ${{ github.event_name == 'workflow_run' }}
+        if: ${{ github.event.workflow_run.conclusion == 'success' }}
         uses: actions/github-script@v6
         with:
           result-encoding: string
