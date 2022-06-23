@@ -1,0 +1,44 @@
+name: Temp
+
+on:
+  push:
+    branches:
+      - tmp
+
+jobs:
+  Tmp:
+    name: Temp
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Temp
+        id: get-notes
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const note = `### New Features 🎉
+            * Test \`backtick\` and $dollar sign
+            * Test \${no-var} and $(no-command)
+            * Test 'single' quote and "double" quotes
+            * Other special chars: ! @ \\
+            `;
+            const noteBash = note.replace(/'/g, `'"'"'`);
+            console.log(note)
+            core.setOutput('note', note);
+            console.log(noteBash)
+            core.setOutput('note-bash', noteBash);
+
+      - name: Print note
+        run: |
+          cd ./packages/js/github-actions
+          TODAY=$(date '+%Y-%m-%d')
+          NEXT_VER="1.0.1"
+          CHANGELOG='${{ steps.get-notes.outputs.note-bash }}'
+          CHANGELOG=$(echo "$CHANGELOG" | sed -E 's/\.? by @[^ ]+ in (https:\/\/github\.com\/.+)/. (\1)/')
+          sed -i "/# Changelog/r"<(
+            printf "\n## ${TODAY} (${NEXT_VER})\n${CHANGELOG}\n"
+          ) CHANGELOG.md
+
+          git diff
